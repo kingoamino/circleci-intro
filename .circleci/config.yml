@@ -47,7 +47,7 @@ workflows:
   build-and-test:
     jobs:
       - build-front
-      - built-back
+      - build-back
       - test-front:
           requires:
             - build-front
