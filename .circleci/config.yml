@@ -58,7 +58,7 @@ workflows:
           requires:
             - test-front
             - test-back
-      - deploy
+      - deploy:
           requires:
             - integration
           filters:
