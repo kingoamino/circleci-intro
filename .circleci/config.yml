@@ -1,18 +1,39 @@
 version: 2
 jobs:
-  build:
+  build-front:
     docker:
       - image: circleci/node:7.10
     working_directory: ~/repo
     steps:
-      - run: echo build step
+      - run: echo build-front step
 
-  test:
+  build-back:
     docker:
       - image: circleci/node:7.10
     working_directory: ~/repo
     steps:
-      - run: echo test step
+      - run: echo build-back step
+
+  test-front:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+    steps:
+      - run: echo test-front step
+  
+  test-back:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+    steps:
+      - run: echo test-back step
+
+  integration:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+    steps:
+      - run: echo integration step
 
   deploy:
     docker:
@@ -25,20 +46,23 @@ workflows:
   version: 2
   build-and-test:
     jobs:
-      - build:
+      - build-front
+      - built-back
+      - test-front:
           requires:
-            - deploy
-      - test:
+            - build-front
+      - test-back:
           requires:
-            - build
-      - hold:
-          type: approval
+            - build-back
+      - integration:
           requires:
-            - test
-      - deploy:
+            - test-front
+            - test-back
+      - deploy
           requires:
-            - hold
+            - integration
           filters:
             branches:
               only:
                 - master
+      
